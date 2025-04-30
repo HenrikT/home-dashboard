@@ -1,6 +1,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --input-text-color: rgb(211, 127, 0);
 }
 
 @media (prefers-color-scheme: dark) {
