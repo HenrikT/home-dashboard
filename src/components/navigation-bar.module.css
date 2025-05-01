@@ -1,0 +1,50 @@
+.nav {
+  margin-top: 10px; /* Optional, keeps the top margin if desired */
+  height: 100%;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10; /* Remove gap if it's causing extra spacing */
+  align-items: flex-start; /* Align buttons to the top */
+}
+
+.navButton {
+  height: 100px;
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Example gradient */
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* 3D shadow */
+}
+
+.navButton:hover {
+  background: linear-gradient(135deg, #feb47b, #ff7e5f); /* Hover gradient change */
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.1); /* Deeper shadow on hover */
+  transform: translateY(-2px); /* Lift effect */
+}
+
+.icon {
+  font-size: 1.5rem;
+  margin-bottom: 5px;
+}
+
+/* Optional: Add unique colors for each button */
+.navButton:nth-child(1) {
+  background: linear-gradient(135deg, #ff7e5f, #feb47b);
+}
+
+.navButton:nth-child(2) {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+}
+
+.navButton:nth-child(3) {
+  background: linear-gradient(135deg, #ff512f, #dd2476);
+}

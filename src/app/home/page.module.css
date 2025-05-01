@@ -1,7 +1,19 @@
 .background {
   height: 100vh;
   display: flex;
+  flex-direction: row;
+}
+
+.mainContent {
+  flex: 1;
+  height: 100vh;
+  display: flex;
   flex-direction: column;
+}
+
+.navigationBar {
+  padding: 5px;
+  margin-bottom: 10px;
 }
 
 .topSection {
