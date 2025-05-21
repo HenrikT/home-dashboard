@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import { FaUser, FaLock } from "react-icons/fa";
@@ -30,7 +30,7 @@ export default function Login() {
             <FaLock className={styles.icon} />
             <input type="password" placeholder="Type your password" className={styles.input} />
           </div>
-          <button type="submit" className={styles.loginButton}>
+          <button aria-label="Login" type="submit" className={styles.loginButton}>
             Login
           </button>
         </form>
