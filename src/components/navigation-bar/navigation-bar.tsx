@@ -16,49 +16,52 @@ type NavItem = {
   label: string;
   icon: JSX.Element;
   type: NavItemType;
-  onItemClicked: MouseEventHandler<HTMLButtonElement>;
 };
 
 export default function NavigationBar() {
   const router = useRouter();
 
-  function onHomeClicked() {
-    router.push("/home");
-  }
-
-  function onSettingsClicked() {
-    router.push("/settings");
-  }
-
-  function onLogoutClicked() {
-    router.push("/login");
-  }
+  const handleClick = (type: NavItemType) => {
+    switch (type) {
+      case NavItemType.Home:
+        router.push("/home");
+        break;
+      case NavItemType.Settings:
+        router.push("/settings");
+        break;
+      case NavItemType.Logout:
+        router.push("/login");
+        break;
+    }
+  };
 
   const navItems: NavItem[] = [
     {
       label: "Home",
       icon: <LuLayoutDashboard className={styles.icon} />,
       type: NavItemType.Home,
-      onItemClicked: onHomeClicked,
     },
     {
       label: "Settings",
       icon: <LuSettings className={styles.icon} />,
       type: NavItemType.Settings,
-      onItemClicked: onSettingsClicked,
     },
     {
       label: "Logout",
       icon: <LuLogOut className={styles.icon} />,
       type: NavItemType.Logout,
-      onItemClicked: onLogoutClicked,
     },
   ];
 
   return (
     <nav className={styles.nav}>
       {navItems.map((item) => (
-        <button key={item.label} className={styles.navButton} onClick={item.onItemClicked}>
+        <button
+          aria-label={item.label}
+          key={item.label}
+          className={styles.navButton}
+          onClick={() => handleClick(item.type)}
+        >
           {item.icon}
           <span className={styles.label}>{item.label}</span>
         </button>
