@@ -18,13 +18,14 @@ beforeEach(() => {
   push.mockClear();
 });
 
-test("login button navigates to /home", () => {
+test("navigates on valid login", () => {
   // Arrange
-  const { getByRole } = render(<Login />);
+  const { getByPlaceholderText, container } = render(<Login />);
 
   // Act
-  const loginButton = getByRole("button", { name: "Login" });
-  fireEvent.click(loginButton);
+  fireEvent.change(getByPlaceholderText("Type your username"), { target: { value: "h@h.h" } });
+  fireEvent.change(getByPlaceholderText("Type your password"), { target: { value: "secret" } });
+  fireEvent.submit(container.querySelector("form")!);
 
   // Assert
   expect(push).toHaveBeenCalledWith("/home");
