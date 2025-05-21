@@ -1,11 +1,11 @@
 .nav {
-  margin-top: 10px; /* Optional, keeps the top margin if desired */
+  margin-top: 10px;
   height: 100%;
   padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10; /* Remove gap if it's causing extra spacing */
-  align-items: flex-start; /* Align buttons to the top */
+  gap: 10;
+  align-items: flex-start;
 }
 
 .navButton {
@@ -14,7 +14,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Example gradient */
+  background: linear-gradient(135deg, #ff7e5f, #feb47b);
   border: none;
   border-radius: 8px;
   padding: 10px;
@@ -22,13 +22,13 @@
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   justify-content: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* 3D shadow */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .navButton:hover {
-  background: linear-gradient(135deg, #feb47b, #ff7e5f); /* Hover gradient change */
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.1); /* Deeper shadow on hover */
-  transform: translateY(-2px); /* Lift effect */
+  background: linear-gradient(135deg, #feb47b, #ff7e5f);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .icon {
@@ -36,7 +36,6 @@
   margin-bottom: 5px;
 }
 
-/* Optional: Add unique colors for each button */
 .navButton:nth-child(1) {
   background: linear-gradient(135deg, #ff7e5f, #feb47b);
 }
