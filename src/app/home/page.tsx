@@ -1,6 +1,5 @@
-import NavigationBar from "@/components/navigation-bar";
+import NavigationBar from "@/components/navigation-bar/navigation-bar";
 import styles from "./page.module.css";
-import { LuUser, LuLock } from "react-icons/lu";
 
 export default function Home() {
   return (
