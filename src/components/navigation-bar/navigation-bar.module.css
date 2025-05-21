@@ -1,10 +1,16 @@
+:root {
+  --btn-home: linear-gradient(135deg, #ff7e5f, #feb47b);
+  --btn-settings: linear-gradient(135deg, #6a11cb, #2575fc);
+  --btn-logout: linear-gradient(135deg, #ff512f, #dd2476);
+}
+
 .nav {
   margin-top: 10px;
   height: 100%;
   padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10;
+  gap: 10px;
   align-items: flex-start;
 }
 
@@ -37,13 +43,13 @@
 }
 
 .navButton:nth-child(1) {
-  background: linear-gradient(135deg, #ff7e5f, #feb47b);
+  background: var(--btn-home);
 }
 
 .navButton:nth-child(2) {
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  background: var(--btn-settings);
 }
 
 .navButton:nth-child(3) {
-  background: linear-gradient(135deg, #ff512f, #dd2476);
+  background: var(--btn-logout);
 }
