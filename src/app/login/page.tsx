@@ -3,6 +3,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import { FaUser, FaLock } from "react-icons/fa";
+import { validateLogin } from "../../utils/utils";
 
 export default function Login() {
   const router = useRouter();
@@ -12,7 +13,12 @@ export default function Login() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/home");
+
+    const validLogin = validateLogin(email, password);
+
+    if (validLogin) {
+      router.push("/home");
+    }
   };
 
   return (
