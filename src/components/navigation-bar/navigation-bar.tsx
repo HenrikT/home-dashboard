@@ -5,6 +5,7 @@ import { LuLayoutDashboard, LuSettings, LuLogOut } from "react-icons/lu";
 import styles from "./navigation-bar.module.css";
 import { JSX, MouseEventHandler } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
 
 export enum NavItemType {
   Home = "Home",
@@ -21,7 +22,7 @@ type NavItem = {
 export default function NavigationBar() {
   const router = useRouter();
 
-  const handleClick = (type: NavItemType) => {
+  const handleClick = async (type: NavItemType) => {
     switch (type) {
       case NavItemType.Home:
         router.push("/home");
@@ -30,6 +31,7 @@ export default function NavigationBar() {
         router.push("/settings");
         break;
       case NavItemType.Logout:
+        await supabase.auth.signOut();
         router.push("/login");
         break;
     }

@@ -4,11 +4,13 @@ import NavigationBar from "./navigation-bar";
 import { expect, test } from "vitest";
 import { vi, beforeEach } from "vitest";
 import { describe } from "node:test";
+import { supabase } from "../../lib/supabaseClient";
 
 const push = vi.fn();
 
 beforeEach(() => {
   push.mockClear();
+  vi.clearAllMocks();
 });
 
 vi.mock("next/navigation", () => ({
@@ -18,6 +20,14 @@ vi.mock("next/navigation", () => ({
     prefetch: vi.fn(),
     back: vi.fn(),
   }),
+}));
+
+vi.mock("../../lib/supabaseClient", () => ({
+  supabase: {
+    auth: {
+      signOut: vi.fn(),
+    },
+  },
 }));
 
 describe("NavigationBar", () => {
@@ -35,13 +45,17 @@ describe("NavigationBar", () => {
     expect(push).toHaveBeenCalledWith("/home");
   });
 
-  test("navigates to /settings when Settings is clicked", () => {
+  test("calls supabase signOut when Logout is clicked", async () => {
+    const signOutMock = supabase.auth.signOut as ReturnType<typeof vi.fn>;
+    signOutMock.mockResolvedValueOnce({ error: null });
     const { getByRole } = render(<NavigationBar />);
-    fireEvent.click(getByRole("button", { name: "Settings" }));
-    expect(push).toHaveBeenCalledWith("/settings");
+    fireEvent.click(getByRole("button", { name: "Logout" }));
+    expect(supabase.auth.signOut).toHaveBeenCalled();
   });
 
-  test("navigates to /login when Logout is clicked", () => {
+  test("navigates to /login after successful logout", async () => {
+    const signOutMock = supabase.auth.signOut as ReturnType<typeof vi.fn>;
+    signOutMock.mockResolvedValueOnce({ error: null });
     const { getByRole } = render(<NavigationBar />);
     fireEvent.click(getByRole("button", { name: "Logout" }));
     expect(push).toHaveBeenCalledWith("/login");
