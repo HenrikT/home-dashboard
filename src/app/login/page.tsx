@@ -13,6 +13,16 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
   useEffect(() => {
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        router.push("/home");
+      }
+    };
+    checkSession();
+  }, [router]);
+
+  useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => {
         setErrorMessage(null);

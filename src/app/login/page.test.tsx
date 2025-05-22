@@ -92,3 +92,32 @@ test("shows an error popup with HTTP code on failed login", async () => {
     expect(screen.getByText(/401/i)).toBeInTheDocument();
   });
 });
+
+test("auto-redirects from /login to /home if session exists", async () => {
+  // Mock getSession to return a valid session
+  const getSessionMock = vi.fn().mockResolvedValue({
+    data: {
+      session: {
+        access_token: "mock-token",
+        refresh_token: "mock-refresh",
+        expires_in: 3600,
+        token_type: "bearer",
+        user: {
+          id: "mock-user-id",
+          email: "h@h.h",
+          user_metadata: { name: "Henrik" },
+        },
+      },
+    },
+    error: null,
+  });
+  // Patch supabase.auth.getSession for this test
+  supabase.auth.getSession = getSessionMock;
+
+  render(<Login />);
+
+  // Wait for redirect to /home
+  await waitFor(() => {
+    expect(push).toHaveBeenCalledWith("/home");
+  });
+});
