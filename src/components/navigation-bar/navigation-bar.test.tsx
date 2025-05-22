@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import NavigationBar from "./navigation-bar";
 import { expect, test } from "vitest";
 import { vi, beforeEach } from "vitest";
@@ -58,6 +58,8 @@ describe("NavigationBar", () => {
     signOutMock.mockResolvedValueOnce({ error: null });
     const { getByRole } = render(<NavigationBar />);
     fireEvent.click(getByRole("button", { name: "Logout" }));
-    expect(push).toHaveBeenCalledWith("/login");
+    await waitFor(() => {
+      expect(push).toHaveBeenCalledWith("/login");
+    });
   });
 });
