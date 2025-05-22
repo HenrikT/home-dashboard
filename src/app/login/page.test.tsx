@@ -1,24 +1,49 @@
 import { vi, expect, test, beforeEach } from "vitest";
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
+import { supabase } from "@/lib/supabaseClient";
 import React from "react";
 import Login from "./page";
 
+// Mock router navigation
 const push = vi.fn();
-
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
     push,
-    replace: vi.fn(),
-    prefetch: vi.fn(),
-    back: vi.fn(),
   }),
 }));
 
+// Clear the mock before each test
 beforeEach(() => {
   push.mockClear();
 });
 
-test("navigates on valid login", () => {
+// Mock supabase loging
+vi.mock("@/lib/supabaseClient", () => {
+  return {
+    supabase: {
+      auth: {
+        signInWithPassword: vi.fn().mockResolvedValue({
+          data: {
+            session: {
+              access_token: "mock-token",
+              refresh_token: "mock-refresh",
+              expires_in: 3600,
+              token_type: "bearer",
+              user: {
+                id: "mock-user-id",
+                email: "h@h.h",
+                user_metadata: { name: "Henrik" },
+              },
+            },
+          },
+          error: null,
+        }),
+      },
+    },
+  };
+});
+
+test("navigates to /home on valid login", async () => {
   // Arrange
   const { getByPlaceholderText, container } = render(<Login />);
 
@@ -28,7 +53,9 @@ test("navigates on valid login", () => {
   fireEvent.submit(container.querySelector("form")!);
 
   // Assert
-  expect(push).toHaveBeenCalledWith("/home");
+  await waitFor(() => {
+    expect(push).toHaveBeenCalledWith("/home");
+  });
 });
 
 test("does not navigate on invalid login", () => {

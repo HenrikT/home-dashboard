@@ -3,7 +3,8 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import { FaUser, FaLock } from "react-icons/fa";
-import { validateLogin } from "../../utils/utils";
+import { supabase } from "@/lib/supabaseClient";
+import type { User, Session, AuthError } from "@supabase/supabase-js";
 
 export default function Login() {
   const router = useRouter();
@@ -11,12 +12,19 @@ export default function Login() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  /**
+   * Attempts to log in the user via Supabase.
+   *
+   * If an error occurs, a popup displaying the error is shown.
+   *
+   * If successful, the user is logged in.
+   */
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const validLogin = validateLogin(email, password);
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (validLogin) {
+    if (data.session) {
       router.push("/home");
     }
   };
@@ -25,7 +33,7 @@ export default function Login() {
     <div className={styles.main}>
       <div className={styles.card}>
         <h1 className={styles.header}>Login</h1>
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} onSubmit={handleLogin}>
           <div className={styles.inputGroup}>
             <FaUser className={styles.icon} />
             <input
