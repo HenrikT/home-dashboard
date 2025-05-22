@@ -1,7 +1,43 @@
+"use client";
 import NavigationBar from "@/components/navigation-bar/navigation-bar";
 import styles from "./page.module.css";
+import React, { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
+import { useRouter } from "next/navigation";
+import { Session } from "@supabase/supabase-js";
 
 export default function Home() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<Session | null>(null);
+
+  // Check if we have a valid session. If we don't, navigate to the login page.
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        router.push("/login");
+      } else {
+        setSession(session);
+      }
+      setLoading(false);
+    });
+  }, []);
+
+  // Show a loading spinner while loading the session.
+  if (loading) {
+    return (
+      <div className={styles.loadingContainer}>
+        <div className={styles.spinner}></div>
+      </div>
+    );
+  }
+
+  // If we don't have a session, show nothing. Wait for navigation to /login.
+  if (!session) {
+    return null;
+  }
+
+  // Main component.
   return (
     <div className={styles.background}>
       <div className={styles.navigationBar}>
