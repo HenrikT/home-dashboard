@@ -1,5 +1,5 @@
 import { vi, expect, test, beforeEach } from "vitest";
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { fireEvent, screen, render, waitFor } from "@testing-library/react";
 import { supabase } from "@/lib/supabaseClient";
 import React from "react";
 import Login from "./page";
@@ -71,4 +71,24 @@ test("does not navigate on invalid login", () => {
 
   // Assert
   expect(push).not.toHaveBeenCalledWith("/home");
+});
+
+test("shows an error popup with HTTP code on failed login", async () => {
+  // Arrange: mock signInWithPassword to return an error with status code
+  (supabase.auth.signInWithPassword as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+    data: { session: null, user: null },
+    error: { status: 401, message: "Unauthorized" },
+  });
+
+  const { getByPlaceholderText, container } = render(<Login />);
+
+  // Act
+  fireEvent.change(getByPlaceholderText("Type your username"), { target: { value: "wrong@user" } });
+  fireEvent.change(getByPlaceholderText("Type your password"), { target: { value: "wrongpass" } });
+  fireEvent.submit(container.querySelector("form")!);
+
+  // Assert: wait for error popup with "401"
+  await waitFor(() => {
+    expect(screen.getByText(/401/i)).toBeInTheDocument();
+  });
 });

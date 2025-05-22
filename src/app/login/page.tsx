@@ -1,16 +1,25 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import { FaUser, FaLock } from "react-icons/fa";
 import { supabase } from "@/lib/supabaseClient";
-import type { User, Session, AuthError } from "@supabase/supabase-js";
 
 export default function Login() {
   const router = useRouter();
 
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
+
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
 
   /**
    * Attempts to log in the user via Supabase.
@@ -26,6 +35,8 @@ export default function Login() {
 
     if (data.session) {
       router.push("/home");
+    } else if (error) {
+      setErrorMessage(`Login failed: ${error.status ?? ""} ${error.message}`);
     }
   };
 
@@ -33,6 +44,11 @@ export default function Login() {
     <div className={styles.main}>
       <div className={styles.card}>
         <h1 className={styles.header}>Login</h1>
+        {errorMessage && (
+          <div className={styles.errorPopup} role="alert" aria-live="assertive">
+            {errorMessage}
+          </div>
+        )}
         <form className={styles.form} onSubmit={handleLogin}>
           <div className={styles.inputGroup}>
             <FaUser className={styles.icon} />
