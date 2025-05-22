@@ -1,39 +1,50 @@
 .background {
   height: 100vh;
   display: flex;
+  flex-direction: column;
+}
+
+.contentWrapper {
+  flex: 1;
+  display: flex;
   flex-direction: row;
 }
 
-.mainContent {
-  flex: 1;
-  height: 100vh;
+.navigationBar {
+  width: 120px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
   display: flex;
   flex-direction: column;
 }
 
-.navigationBar {
-  padding: 5px;
-  margin-bottom: 10px;
+.mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .topSection {
   flex: 1;
-  padding: 10px;
   display: flex;
   flex-direction: row;
 }
 
 .bottomSection {
+  margin-bottom: 10px;
+  margin-right: 10px;
   flex: 1;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .topRight {
+  margin-bottom: 10px;
+  margin-left: 5px;
+  margin-right: 10px;
   flex: 1;
   display: flex;
   align-items: center;
@@ -41,6 +52,8 @@
 }
 
 .topLeft {
+  margin-bottom: 10px;
+  margin-right: 5px;
   flex: 1;
   display: flex;
   align-items: center;
@@ -50,7 +63,6 @@
 .card {
   height: 100%;
   width: 100%;
-  margin: 5px;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -82,4 +94,31 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+.headerSection {
+  height: 50px;
+  background-color: rgb(41, 41, 41);
+  border-radius: 10px;
+  margin: 10px;
+  padding-right: 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  box-sizing: border-box;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  user-select: none;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userIcon {
+  font-size: 1.5rem;
+  color: #bbb;
 }

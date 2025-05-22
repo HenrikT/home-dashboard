@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import { Session } from "@supabase/supabase-js";
+import { LuUser } from "react-icons/lu";
 
 export default function Home() {
   const router = useRouter();
@@ -21,7 +22,7 @@ export default function Home() {
       }
       setLoading(false);
     });
-  }, []);
+  }, [router]);
 
   // Show a loading spinner while loading the session.
   if (loading) {
@@ -40,27 +41,35 @@ export default function Home() {
   // Main component.
   return (
     <div className={styles.background}>
-      <div className={styles.navigationBar}>
-        <div className={styles.card}>
-          <NavigationBar />
+      <div className={styles.headerSection}>
+        <div className={styles.userInfo}>
+          <span>{session.user.email}</span>
+          <LuUser size={18} />
         </div>
       </div>
-      <div className={styles.mainContent}>
-        <div className={styles.topSection}>
-          <div className={styles.topLeft}>
-            <div className={styles.card}>
-              <p>This is the top left section</p>
-            </div>
-          </div>
-          <div className={styles.topRight}>
-            <div className={styles.card}>
-              <p>This is the top right section</p>
-            </div>
+      <div className={styles.contentWrapper}>
+        <div className={styles.navigationBar}>
+          <div className={styles.card}>
+            <NavigationBar />
           </div>
         </div>
-        <div className={styles.bottomSection}>
-          <div className={styles.card}>
-            <p>This is the bottom section</p>
+        <div className={styles.mainContent}>
+          <div className={styles.topSection}>
+            <div className={styles.topLeft}>
+              <div className={styles.card}>
+                <p>This is the top left section</p>
+              </div>
+            </div>
+            <div className={styles.topRight}>
+              <div className={styles.card}>
+                <p>This is the top right section</p>
+              </div>
+            </div>
+          </div>
+          <div className={styles.bottomSection}>
+            <div className={styles.card}>
+              <p>This is the bottom section</p>
+            </div>
           </div>
         </div>
       </div>

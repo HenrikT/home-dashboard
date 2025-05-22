@@ -28,3 +28,21 @@ test("redirects to /login if no session is present", async () => {
     expect(push).toHaveBeenCalledWith("/login");
   });
 });
+
+test("displays user email in header when session exists", async () => {
+  const { supabase } = await import("@/lib/supabaseClient");
+  const userEmail = "testuser@example.com";
+
+  // Cast to mocked function so TypeScript recognizes mock methods
+  const getSessionMock = supabase.auth.getSession as unknown as ReturnType<typeof vi.fn>;
+  getSessionMock.mockResolvedValueOnce({
+    data: {
+      session: {
+        user: { email: userEmail },
+      },
+    },
+  });
+
+  const { findByText } = render(<Home />);
+  expect(await findByText(userEmail)).toBeInTheDocument();
+});
