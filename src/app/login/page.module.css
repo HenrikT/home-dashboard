@@ -69,13 +69,6 @@
   outline: 5px solid var(--input-text-color);
 }
 
-input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0px 1000px #f7f7f7 inset !important;
-  box-shadow: 0 0 0px 1000px #f7f7f7 inset !important;
-  -webkit-text-fill-color: var(--input-text-color) !important;
-  transition: background-color 5000s ease-in-out 0s;
-}
-
 .loginButton {
   padding: 0.8rem;
   font-size: 1rem;
