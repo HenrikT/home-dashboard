@@ -1,12 +1,12 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Next.js: dev",
-            "type": "node-terminal",
-            "request": "launch",
-            "command": "npm run dev",
-            "cwd": "${workspaceFolder}"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Next.js: dev (strict)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev:strict",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
 }

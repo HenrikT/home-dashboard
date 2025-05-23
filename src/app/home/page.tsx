@@ -2,7 +2,7 @@
 import NavigationBar from "@/components/navigation-bar/navigation-bar";
 import styles from "./page.module.css";
 import React, { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/lib/supabase-browser";
 import { useRouter } from "next/navigation";
 import { Session } from "@supabase/supabase-js";
 import { LuUser } from "react-icons/lu";
