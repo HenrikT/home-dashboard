@@ -3,7 +3,7 @@
 import React from "react";
 import { LuLayoutDashboard, LuSettings, LuLogOut } from "react-icons/lu";
 import styles from "./navigation-bar.module.css";
-import { JSX, MouseEventHandler } from "react";
+import { JSX } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 
