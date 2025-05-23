@@ -4,9 +4,29 @@ import NavigationBar from "./navigation-bar";
 import { expect, test } from "vitest";
 import { vi, beforeEach } from "vitest";
 import { describe } from "node:test";
-import { supabase } from "../../lib/supabase-browser";
+import { supabase } from "@/lib/supabase/client";
 
 const push = vi.fn();
+
+// We must declare the mock for supabase first, before importing anything that uses it.
+// This is because `vi.mock` calls are hoisted to the top of the file and run before imports,
+// so if we import `supabase` before mocking it, the real module would be imported instead of the mock.
+vi.mock("@/lib/supabase/client", () => {
+  const signOut = vi.fn().mockResolvedValue({ error: null });
+  return {
+    supabase: {
+      auth: {
+        signOut,
+        signInWithPassword: vi.fn(),
+        getSession: vi.fn(),
+      },
+    },
+  };
+});
+
+// Using `vi.mocked` unwraps the mocked function so we can refer to it in tests.
+// This must come after `vi.mock()` to ensure we get the mocked version.
+const signOut = vi.mocked(supabase.auth.signOut);
 
 beforeEach(() => {
   push.mockClear();
@@ -20,14 +40,6 @@ vi.mock("next/navigation", () => ({
     prefetch: vi.fn(),
     back: vi.fn(),
   }),
-}));
-
-vi.mock("../../lib/supabaseClient", () => ({
-  supabase: {
-    auth: {
-      signOut: vi.fn(),
-    },
-  },
 }));
 
 describe("NavigationBar", () => {
@@ -46,16 +58,12 @@ describe("NavigationBar", () => {
   });
 
   test("calls supabase signOut when Logout is clicked", async () => {
-    const signOutMock = supabase.auth.signOut as ReturnType<typeof vi.fn>;
-    signOutMock.mockResolvedValueOnce({ error: null });
     const { getByRole } = render(<NavigationBar />);
     fireEvent.click(getByRole("button", { name: "Logout" }));
-    expect(supabase.auth.signOut).toHaveBeenCalled();
+    expect(signOut).toHaveBeenCalled();
   });
 
   test("navigates to /login after successful logout", async () => {
-    const signOutMock = supabase.auth.signOut as ReturnType<typeof vi.fn>;
-    signOutMock.mockResolvedValueOnce({ error: null });
     const { getByRole } = render(<NavigationBar />);
     fireEvent.click(getByRole("button", { name: "Logout" }));
     await waitFor(() => {
