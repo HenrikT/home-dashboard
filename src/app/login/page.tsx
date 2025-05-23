@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import { FaUser, FaLock } from "react-icons/fa";
-import { supabase } from "@/lib/supabase-browser";
+import { supabase } from "@/lib/supabase/client";
 
 export default function Login() {
   const router = useRouter();

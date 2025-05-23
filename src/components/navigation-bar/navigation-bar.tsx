@@ -5,7 +5,7 @@ import { LuLayoutDashboard, LuSettings, LuLogOut } from "react-icons/lu";
 import styles from "./navigation-bar.module.css";
 import { JSX } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase-browser";
+import { supabase } from "@/lib/supabase/client";
 
 export enum NavItemType {
   Home = "Home",
