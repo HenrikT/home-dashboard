@@ -4,7 +4,7 @@ import NavigationBar from "./navigation-bar";
 import { expect, test } from "vitest";
 import { vi, beforeEach } from "vitest";
 import { describe } from "node:test";
-import { supabase } from "../../lib/supabaseClient";
+import { supabase } from "../../lib/supabase-browser";
 
 const push = vi.fn();
 

@@ -1,6 +1,6 @@
 import { vi, expect, test, beforeEach } from "vitest";
 import { fireEvent, screen, render, waitFor } from "@testing-library/react";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/lib/supabase-browser";
 import React from "react";
 import Login from "./page";
 

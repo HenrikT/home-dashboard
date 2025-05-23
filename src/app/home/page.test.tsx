@@ -30,7 +30,7 @@ test("redirects to /login if no session is present", async () => {
 });
 
 test("displays user email in header when session exists", async () => {
-  const { supabase } = await import("@/lib/supabaseClient");
+  const { supabase } = await import("@/lib/supabase-browser");
   const userEmail = "testuser@example.com";
 
   // Cast to mocked function so TypeScript recognizes mock methods
