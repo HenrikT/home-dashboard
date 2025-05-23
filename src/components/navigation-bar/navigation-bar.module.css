@@ -1,9 +1,3 @@
-:root {
-  --btn-home: linear-gradient(135deg, #ff7e5f, #feb47b);
-  --btn-settings: linear-gradient(135deg, #6a11cb, #2575fc);
-  --btn-logout: linear-gradient(135deg, #ff512f, #dd2476);
-}
-
 .nav {
   margin-top: 10px;
   height: 100%;
