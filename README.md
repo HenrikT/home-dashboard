@@ -46,6 +46,18 @@ A modern dashboard application for displaying Norwegian power prices (with more 
 
 ---
 
+## 🕑 Keep-Alive Cron Job
+
+To prevent Supabase from pausing on the free tier, this project includes a Keep-Alive Cron Job.
+
+- **Endpoint**: `/api/keep-alive`
+- **Runs daily** via [Vercel Cron](https://vercel.com/docs/cron-jobs)
+- **Security**: Protected by `CRON_SECRET` (required in Authorization header)
+
+The endpoint performs a lightweight DB update to the `keep_alive` table, keeping the Supabase project active.
+
+---
+
 ## 🚀 Getting Started
 
 Install dependencies and start the local dev server:
@@ -71,7 +83,8 @@ src/
 ├── lib/                # Utility functions (e.g., API wrappers)
 ├── styles/             # Global styles (vanilla CSS)
 ├── app/api/            # Vercel serverless functions
-│   └── fetch-prices/   # Function triggered by Vercel Cron
+│   ├── fetch-prices/   # Function triggered by Vercel Cron
+│   └── keep-alive/     # Function triggered by Vercel Cron (Keep-Alive for Supabase)
 ```
 
 ---
