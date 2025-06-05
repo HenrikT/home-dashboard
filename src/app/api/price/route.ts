@@ -1,13 +1,10 @@
-import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import mockData from "@/data/mock-energy-prices.json";
+import { supabase } from "@/lib/supabase/client";
 
 export async function GET() {
-  const supabase = await createClient();
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const response = await supabase.auth.getSession();
+  const session = response.data.session;
 
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
