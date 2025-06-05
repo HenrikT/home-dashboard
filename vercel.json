@@ -3,5 +3,11 @@
     "deploymentEnabled": {
       "devel": false
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/keep-alive",
+      "schedule": "0 12 * * *"
+    }
+  ]
 }
