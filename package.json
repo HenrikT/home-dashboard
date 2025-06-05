@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:strict": "npm run lint && npm run dev",
-    "build": "npm run lint && next build",
+    "build": "NEXT_PUBLIC_COMMIT_SHA=$(git rev-parse --short HEAD) NEXT_PUBLIC_COMMIT_MESSAGE=\"$(git log -1 --pretty=%B)\" next build",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest"

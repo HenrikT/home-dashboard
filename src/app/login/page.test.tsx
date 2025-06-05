@@ -133,3 +133,15 @@ test("auto-redirects from /login to /home if session exists", async () => {
     expect(push).toHaveBeenCalledWith("/home");
   });
 });
+
+test("shows build info", () => {
+  // Render Login page
+  const { getByTestId } = render(<Login />);
+
+  // Assert that build info is shown
+  const buildInfo = getByTestId("build-info");
+
+  // You can make this stricter if you want:
+  expect(buildInfo).toBeInTheDocument();
+  expect(buildInfo.textContent).toMatch(/Build:/i);
+});

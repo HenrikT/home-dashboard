@@ -8,6 +8,9 @@ import { supabase } from "@/lib/supabase/client";
 export default function Login() {
   const router = useRouter();
 
+  const commitSha = process.env.NEXT_PUBLIC_COMMIT_SHA?.slice(0, 7) ?? "";
+  const commitMessage = process.env.NEXT_PUBLIC_COMMIT_MESSAGE ?? "Development build";
+
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
@@ -86,6 +89,9 @@ export default function Login() {
             Login
           </button>
         </form>
+      </div>
+      <div className={styles.buildInfo} data-testid="build-info">
+        Build: {commitSha} {commitSha ? "-" : null} {commitMessage}
       </div>
     </div>
   );
