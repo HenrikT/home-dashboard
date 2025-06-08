@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Session } from "@supabase/supabase-js";
 import { LuUser } from "react-icons/lu";
 import { supabase } from "@/lib/supabase/client";
+import PriceSection from "@/components/price-section/price-section";
 
 export default function Home() {
   const router = useRouter();
@@ -57,7 +58,7 @@ export default function Home() {
           <div className={styles.topSection}>
             <div className={styles.topLeft}>
               <div className={styles.card}>
-                <p>This is the top left section</p>
+                <PriceSection />
               </div>
             </div>
             <div className={styles.topRight}>
