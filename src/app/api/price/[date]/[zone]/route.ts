@@ -1,3 +1,5 @@
+import type { ExternalPriceItem, PriceData, PriceItem } from "@/types/price";
+
 /**
  * Handles GET requests for power prices by date and zone.
  *
@@ -12,7 +14,11 @@
  * - Parses the date into year/month-day format required by the external API.
  * - Fetches power prices from https://www.hvakosterstrommen.no/api/v1/prices/{year}/{month-day}_{zone}.json
  * - Caches the response (force-cache).
- * - Returns the JSON data from the external API to the caller.
+ * - Calculates and returns statistics:
+ *     - min, avg, and max price in øre/kWh.
+ *     - Each price item includes derived `øre_per_kWh`.
+ *     - Includes the current price (`now`) in øre/kWh for the current hour in Europe/Oslo timezone, or `null` if not found.
+ * - Returns the enriched JSON data to the caller.
  *
  * Example request:
  *   GET /api/price/2025-06-08/NO1
@@ -27,6 +33,7 @@
  * - Logs the request and external URL to server logs.
  * - Validates date and zone format.
  */
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ date: string; zone: string }> }
@@ -35,47 +42,57 @@ export async function GET(
 
   console.log(`Handling GET for date=${date}, zone=${zone}`);
 
-  // Validate required params
-  if (!date) {
-    console.warn("Missing date");
-    return new Response("Missing date", { status: 400 });
-  }
-
-  if (!zone) {
-    console.warn("Missing zone");
-    return new Response("Missing zone", { status: 400 });
-  }
-
-  // Validate date format YYYY-MM-DD
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    console.warn("Invalid date format:", date);
-    return new Response("Invalid date format. Expected YYYY-MM-DD.", { status: 400 });
-  }
-
-  // Validate zone format NO1-NO5
-  if (!/^NO[1-5]$/.test(zone)) {
-    console.warn("Invalid zone:", zone);
-    return new Response("Invalid zone. Expected NO1-NO5.", { status: 400 });
-  }
+  // Validate input
+  if (!date || !zone) return new Response("Missing date or zone", { status: 400 });
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date))
+    return new Response("Invalid date format", { status: 400 });
+  if (!/^NO[1-5]$/.test(zone)) return new Response("Invalid zone", { status: 400 });
 
   const [year, month, day] = date.split("-");
   const externalUrl = `https://www.hvakosterstrommen.no/api/v1/prices/${year}/${month}-${day}_${zone}.json`;
 
   console.log(`Fetching external URL: ${externalUrl}`);
+  const response = await fetch(externalUrl, { cache: "force-cache" });
 
-  const response = await fetch(externalUrl, {
-    cache: "force-cache",
-  });
-
-  // External fetch error handling
   if (!response.ok) {
-    console.error(`External fetch failed: ${response.status} ${response.statusText}`);
-    return new Response(`Failed to fetch external data`, { status: 502 });
+    console.error(`External fetch failed: ${response.status}`);
+    return new Response("Failed to fetch external data", { status: 502 });
   }
 
-  const data = await response.json();
+  const rawData = await response.json();
 
-  console.log("Fetched power prices:", data.length, "entries");
+  const priceItems: PriceItem[] = (rawData as ExternalPriceItem[]).map((item) => ({
+    time_start: item.time_start,
+    time_end: item.time_end,
+    øre_per_kWh: Math.round(item.NOK_per_kWh * 100),
+  }));
 
-  return Response.json(data);
+  const values = priceItems.map((p) => p.øre_per_kWh);
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const avg = Math.round(values.reduce((sum, v) => sum + v, 0) / values.length);
+
+  // Determine current hour in Europe/Oslo
+  const osloTimeFormatter = new Intl.DateTimeFormat("nb-NO", {
+    timeZone: "Europe/Oslo",
+    hour: "2-digit",
+    hour12: false,
+  });
+  const currentHour = osloTimeFormatter.format(new Date());
+  const timePrefix = `${date}T${currentHour}:00:00`;
+
+  const now = priceItems.find((i) => i.time_start.startsWith(timePrefix))?.øre_per_kWh ?? null;
+
+  const result: PriceData = {
+    date,
+    zone,
+    min,
+    avg,
+    max,
+    now,
+    priceItems,
+  };
+
+  console.log("Returning enriched power price data");
+  return Response.json(result);
 }

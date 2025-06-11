@@ -1,12 +1,8 @@
-// src/app/api/price/[date]/[zone]/route.test.ts
-
 import { GET } from "./route";
 import { expect, test, vi } from "vitest";
 
-// Mock fetch (global)
 global.fetch = vi.fn();
 
-// Helpers
 function createRequest() {
   return new Request("http://localhost/api/price/2025-06-08/NO1");
 }
@@ -46,8 +42,19 @@ test("returns 502 if external fetch fails", async () => {
   expect(text).toContain("Failed to fetch external data");
 });
 
-test("returns 200 OK with valid data", async () => {
-  const mockData = [{ time_start: "2025-06-08T00:00:00", NOK_per_kWh: 0.5 }];
+test("returns 200 OK with enriched price data", async () => {
+  // Fake time to 2025-06-08T00:15:00+02:00 (Oslo time)
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date("2025-06-07T22:15:00Z")); // equivalent to 2025-06-08T00:15:00+02:00
+
+  const mockData = [
+    {
+      NOK_per_kWh: 0.5,
+      EUR_per_kWh: 0.04,
+      time_start: "2025-06-08T00:00:00+02:00",
+      time_end: "2025-06-08T01:00:00+02:00",
+    },
+  ];
 
   (fetch as unknown as vi.Mock).mockResolvedValueOnce({
     ok: true,
@@ -59,21 +66,38 @@ test("returns 200 OK with valid data", async () => {
 
   expect(res.status).toBe(200);
   const data = await res.json();
-  expect(data).toEqual(mockData);
+
+  expect(data).toMatchObject({
+    date: "2025-06-08",
+    zone: "NO1",
+    min: 50,
+    avg: 50,
+    max: 50,
+    now: 50,
+    priceItems: [
+      {
+        time_start: "2025-06-08T00:00:00+02:00",
+        time_end: "2025-06-08T01:00:00+02:00",
+        øre_per_kWh: 50,
+      },
+    ],
+  });
+
+  vi.useRealTimers();
 });
 
 test("returns 400 if zone is missing", async () => {
   const res = await GET(createRequest(), { params: createParams("2025-06-08", "") });
   expect(res.status).toBe(400);
   const text = await res.text();
-  expect(text).toContain("Missing zone");
+  expect(text).toContain("Missing date or zone");
 });
 
 test("returns 400 if zone format is invalid", async () => {
   const res = await GET(createRequest(), { params: createParams("2025-06-08", "NORWAY1") });
   expect(res.status).toBe(400);
   const text = await res.text();
-  expect(text).toContain("Invalid zone. Expected NO1-NO5.");
+  expect(text).toContain("Invalid zone");
 });
 
 test("returns 502 if external API call fails", async () => {
@@ -88,25 +112,4 @@ test("returns 502 if external API call fails", async () => {
   expect(res.status).toBe(502);
   const text = await res.text();
   expect(text).toContain("Failed to fetch external data");
-});
-
-test("returns 200 and external data for valid request", async () => {
-  const mockData = [
-    {
-      NOK_per_kWh: 0.5,
-      EUR_per_kWh: 0.04,
-      time_start: "2025-06-08T00:00",
-      time_end: "2025-06-08T01:00",
-    },
-  ];
-
-  vi.spyOn(global, "fetch").mockResolvedValueOnce({
-    ok: true,
-    json: vi.fn().mockResolvedValue(mockData),
-  } as unknown as Response);
-
-  const res = await GET(createRequest(), { params: createParams("2025-06-08", "NO1") });
-  expect(res.status).toBe(200);
-  const json = await res.json();
-  expect(json).toEqual(mockData);
 });
