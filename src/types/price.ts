@@ -21,6 +21,5 @@ export type PriceData = {
   min: number;
   avg: number;
   max: number;
-  now: number | null;
   priceItems: PriceItem[];
 };

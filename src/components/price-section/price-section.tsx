@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import styles from "./price-section.module.css";
 import React from "react";
-import type { PriceData } from "@/types/price";
+import type { PriceData, PriceItem } from "@/types/price";
 import { DateAction, handleDateActionForDate, toSimpleDateString } from "@/utils/date-utils";
 import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 
@@ -56,7 +56,7 @@ export default function PriceSection() {
         <div className={`${styles.statBox} ${styles.now}`}>
           <div className={styles.label}>Now</div>
           <div className={styles.value}>
-            {isMissing ? "X" : data.now}
+            {isMissing ? "X" : getCurrentPriceForNow(data.priceItems)}
             <span className={styles.unit}>øre</span>
           </div>
         </div>
@@ -111,4 +111,18 @@ export default function PriceSection() {
       </div>
     </section>
   );
+}
+
+function getCurrentPriceForNow(priceItems: PriceItem[]): number | string {
+  const now = new Date();
+  const osloHour = now.toLocaleTimeString("nb-NO", {
+    timeZone: "Europe/Oslo",
+    hour: "2-digit",
+    hour12: false,
+  });
+
+  const date = toSimpleDateString(now);
+  const prefix = `${date}T${osloHour}:00:00`;
+
+  return priceItems.find((item) => item.time_start.startsWith(prefix))?.øre_per_kWh ?? "X";
 }

@@ -18,7 +18,7 @@ import type { ExternalPriceItem, PriceData, PriceItem } from "@/types/price";
  * - Calculates and returns statistics:
  *     - min, avg, and max price in øre/kWh.
  *     - Each price item includes derived `øre_per_kWh`.
- *     - Includes the current price (`now`) in øre/kWh for the current hour in Europe/Oslo timezone, or `null` if not found.
+ * - Note: `now` is derived client-side to preserve static caching.
  * - Returns the enriched JSON data to the caller.
  *
  * Example request:
@@ -64,7 +64,6 @@ export async function GET(
         min: 0,
         avg: 0,
         max: 0,
-        now: null,
         priceItems: [],
       };
 
@@ -91,24 +90,12 @@ export async function GET(
   const max = Math.max(...values);
   const avg = Math.round(values.reduce((sum, v) => sum + v, 0) / values.length);
 
-  // Determine current hour in Europe/Oslo
-  const osloTimeFormatter = new Intl.DateTimeFormat("nb-NO", {
-    timeZone: "Europe/Oslo",
-    hour: "2-digit",
-    hour12: false,
-  });
-  const currentHour = osloTimeFormatter.format(new Date());
-  const timePrefix = `${date}T${currentHour}:00:00`;
-
-  const now = priceItems.find((i) => i.time_start.startsWith(timePrefix))?.øre_per_kWh ?? null;
-
   const result: PriceData = {
     date,
     zone,
     min,
     avg,
     max,
-    now,
     priceItems,
   };
 
