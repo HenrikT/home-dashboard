@@ -19,7 +19,11 @@ type NavItem = {
   type: NavItemType;
 };
 
-export default function NavigationBar() {
+type NavigationBarProps = {
+  onShowSettings: () => void;
+};
+
+export default function NavigationBar({ onShowSettings }: NavigationBarProps) {
   const router = useRouter();
 
   const handleClick = async (type: NavItemType) => {
@@ -28,7 +32,7 @@ export default function NavigationBar() {
         router.push("/home");
         break;
       case NavItemType.Settings:
-        router.push("/settings");
+        onShowSettings();
         break;
       case NavItemType.Logout:
         await supabase.auth.signOut();

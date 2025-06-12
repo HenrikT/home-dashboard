@@ -44,27 +44,51 @@ vi.mock("next/navigation", () => ({
 
 describe("NavigationBar", () => {
   test("renders nav buttons", () => {
-    render(<NavigationBar />);
+    render(
+      <NavigationBar
+        onShowSettings={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
+    );
     expect(screen.getByText("Home")).toBeInTheDocument();
     expect(screen.getByText("Settings")).toBeInTheDocument();
     expect(screen.getByText("Logout")).toBeInTheDocument();
   });
 
   test("navigates to /home when Home is clicked", () => {
-    const { getByRole } = render(<NavigationBar />);
+    const { getByRole } = render(
+      <NavigationBar
+        onShowSettings={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
+    );
     const homeButton = getByRole("button", { name: "Home" });
     fireEvent.click(homeButton);
     expect(push).toHaveBeenCalledWith("/home");
   });
 
   test("calls supabase signOut when Logout is clicked", async () => {
-    const { getByRole } = render(<NavigationBar />);
+    const { getByRole } = render(
+      <NavigationBar
+        onShowSettings={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
+    );
     fireEvent.click(getByRole("button", { name: "Logout" }));
     expect(signOut).toHaveBeenCalled();
   });
 
   test("navigates to /login after successful logout", async () => {
-    const { getByRole } = render(<NavigationBar />);
+    const { getByRole } = render(
+      <NavigationBar
+        onShowSettings={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
+    );
     fireEvent.click(getByRole("button", { name: "Logout" }));
     await waitFor(() => {
       expect(push).toHaveBeenCalledWith("/login");

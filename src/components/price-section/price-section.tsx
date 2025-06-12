@@ -10,10 +10,23 @@ import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 export default function PriceSection() {
   const [data, setData] = useState<PriceData>();
   const [date, setDate] = useState<string>(toSimpleDateString(new Date()));
-
-  const zone = "NO1";
+  const [zone, setZone] = useState<string | null>(null);
 
   useEffect(() => {
+    const loadZone = () => {
+      const savedZone = localStorage.getItem("powerZone");
+      setZone(savedZone || "NO1");
+    };
+
+    loadZone();
+
+    window.addEventListener("powerZoneChanged", loadZone);
+    return () => window.removeEventListener("powerZoneChanged", loadZone);
+  }, []);
+
+  useEffect(() => {
+    if (!zone) return;
+
     async function fetchData() {
       try {
         const res = await fetch(`/api/price/${date}/${zone}`);
@@ -30,6 +43,7 @@ export default function PriceSection() {
         setData(undefined);
       }
     }
+
     fetchData();
   }, [date, zone]);
 

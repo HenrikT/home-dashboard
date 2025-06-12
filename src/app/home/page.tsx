@@ -7,11 +7,36 @@ import { Session } from "@supabase/supabase-js";
 import { LuUser } from "react-icons/lu";
 import { supabase } from "@/lib/supabase/client";
 import PriceSection from "@/components/price-section/price-section";
+import SettingsOverlay from "@/components/settings-overlay/settings-overlay";
+import { POWER_ZONE_LABELS, PowerZone } from "@/constants/power-zone";
 
 export default function Home() {
   const router = useRouter();
+  const [showSettings, setShowSettings] = useState(false);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
+  const [selectedZone, setSelectedZone] = useState<PowerZone>(PowerZone.NO1);
+
+  // Get the selected power zone from local storage to show it on the top bar.
+  useEffect(() => {
+    const loadZone = () => {
+      const storedZone = localStorage.getItem("powerZone") as PowerZone | null;
+      if (storedZone && Object.values(PowerZone).includes(storedZone)) {
+        setSelectedZone(storedZone);
+      }
+    };
+
+    // Initial load
+    loadZone();
+
+    // Listen for custom zone change events
+    const handleZoneChanged = () => loadZone();
+    window.addEventListener("powerZoneChanged", handleZoneChanged);
+
+    return () => {
+      window.removeEventListener("powerZoneChanged", handleZoneChanged);
+    };
+  }, []);
 
   // Check if we have a valid session. If we don't, navigate to the login page.
   useEffect(() => {
@@ -43,6 +68,9 @@ export default function Home() {
   return (
     <div className={styles.background}>
       <div className={styles.headerSection}>
+        <div className={styles.regionInfo}>
+          <span>{POWER_ZONE_LABELS[selectedZone]}</span>
+        </div>
         <div className={styles.userInfo}>
           <span>{session.user.email}</span>
           <LuUser size={18} />
@@ -51,7 +79,8 @@ export default function Home() {
       <div className={styles.contentWrapper}>
         <div className={styles.navigationBar}>
           <div className={styles.card}>
-            <NavigationBar />
+            <NavigationBar onShowSettings={() => setShowSettings(true)} />
+            {showSettings && <SettingsOverlay onClose={() => setShowSettings(false)} />}
           </div>
         </div>
         <div className={styles.mainContent}>
