@@ -113,3 +113,101 @@ test("returns 502 if external API call fails", async () => {
   const text = await res.text();
   expect(text).toContain("Failed to fetch external data");
 });
+
+test("updates 'now' value correctly based on hour", async () => {
+  const mockDataHour15 = [
+    {
+      NOK_per_kWh: 0.38,
+      EUR_per_kWh: 0.03,
+      time_start: "2025-06-08T15:00:00+02:00",
+      time_end: "2025-06-08T16:00:00+02:00",
+    },
+    {
+      NOK_per_kWh: 0.5,
+      EUR_per_kWh: 0.04,
+      time_start: "2025-06-08T16:00:00+02:00",
+      time_end: "2025-06-08T17:00:00+02:00",
+    },
+  ];
+
+  vi.useFakeTimers();
+
+  // Simulate 15:49 Oslo time (13:49 UTC)
+  vi.setSystemTime(new Date("2025-06-08T13:49:00Z"));
+
+  (fetch as unknown as vi.Mock).mockResolvedValueOnce({
+    ok: true,
+    status: 200,
+    json: vi.fn().mockResolvedValue(mockDataHour15),
+  });
+
+  const res1 = await GET(createRequest(), { params: createParams("2025-06-08", "NO1") });
+  const data1 = await res1.json();
+  expect(data1.now).toBe(38);
+
+  // Advance time to 16:20 Oslo time (14:20 UTC)
+  vi.setSystemTime(new Date("2025-06-08T14:20:00Z"));
+
+  (fetch as unknown as vi.Mock).mockResolvedValueOnce({
+    ok: true,
+    status: 200,
+    json: vi.fn().mockResolvedValue(mockDataHour15),
+  });
+
+  const res2 = await GET(createRequest(), { params: createParams("2025-06-08", "NO1") });
+  const data2 = await res2.json();
+  expect(data2.now).toBe(50);
+
+  vi.useRealTimers();
+});
+
+test("caches result and does not update 'now' even if time changes (static behavior)", async () => {
+  const mockData = [
+    {
+      NOK_per_kWh: 0.38,
+      EUR_per_kWh: 0.03,
+      time_start: "2025-06-08T15:00:00+02:00",
+      time_end: "2025-06-08T16:00:00+02:00",
+    },
+    {
+      NOK_per_kWh: 0.5,
+      EUR_per_kWh: 0.04,
+      time_start: "2025-06-08T16:00:00+02:00",
+      time_end: "2025-06-08T17:00:00+02:00",
+    },
+  ];
+
+  vi.useFakeTimers();
+
+  // Simulate first request at 15:49 Oslo time (13:49 UTC)
+  vi.setSystemTime(new Date("2025-06-08T13:49:00Z"));
+
+  (fetch as unknown as vi.Mock).mockResolvedValueOnce({
+    ok: true,
+    status: 200,
+    json: vi.fn().mockResolvedValue(mockData),
+  });
+
+  const res1 = await GET(createRequest(), { params: createParams("2025-06-08", "NO1") });
+  const data1 = await res1.json();
+  expect(data1.now).toBe(38);
+
+  // Simulate second request at 16:20 Oslo time (14:20 UTC)
+  vi.setSystemTime(new Date("2025-06-08T14:20:00Z"));
+
+  // Provide a new mock fetch response for the second request
+  (fetch as unknown as vi.Mock).mockResolvedValueOnce({
+    ok: true,
+    status: 200,
+    json: vi.fn().mockResolvedValue(mockData),
+  });
+
+  // No new fetch — result should be cached
+  const res2 = await GET(createRequest(), { params: createParams("2025-06-08", "NO1") });
+  const data2 = await res2.json();
+
+  // Expect same value due to static cache
+  expect(data2.now).toBe(38);
+
+  vi.useRealTimers();
+});
