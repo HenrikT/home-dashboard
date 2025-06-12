@@ -31,6 +31,22 @@
   box-sizing: border-box;
 }
 
+@media (max-width: 1120px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding-inline: 0;
+  }
+
+  .value {
+    font-size: 1.6rem;
+  }
+
+  .label {
+    font-size: 0.8rem;
+  }
+}
+
 .statBox {
   position: relative;
   aspect-ratio: auto 1/1;
@@ -69,22 +85,23 @@
 }
 
 .label {
-  font-size: 0.9rem;
+  font-size: clamp(0.75rem, 1.5vw, 1rem);
   font-weight: 500;
   color: rgba(255, 255, 255, 0.85);
   margin-bottom: 0.6rem;
 }
 
 .value {
-  font-size: 2rem;
+  font-size: clamp(1.4rem, 4vw, 4rem);
   font-weight: 700;
   display: flex;
   align-items: baseline;
   justify-content: center;
   line-height: 1;
 }
+
 .unit {
-  font-size: 1rem;
+  font-size: clamp(0.75rem, 1.2vw, 1rem);
   font-weight: 500;
   line-height: 1;
   margin-left: 0.3rem;
@@ -182,4 +199,24 @@
   box-sizing: border-box;
   max-height: 56px;
   flex-wrap: nowrap;
+}
+
+@media (max-width: 1120px) {
+  .buttonSection {
+    gap: 0.4rem;
+  }
+
+  .iconButton {
+    flex: 0 0 48px;
+    min-width: 48px;
+    max-width: 48px;
+  }
+
+  .todayButton {
+    flex: 1;
+    min-width: 0;
+    max-width: none;
+    padding: 0 0.5rem;
+    font-size: 0.9rem;
+  }
 }
