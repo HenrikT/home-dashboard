@@ -55,6 +55,24 @@ export async function GET(
   const response = await fetch(externalUrl, { cache: "force-cache" });
 
   if (!response.ok) {
+    if (response.status === 404) {
+      console.warn(`No price data available yet for ${date} in zone ${zone}`);
+      const emptyResult: PriceData = {
+        date,
+        zone,
+        min: 0,
+        avg: 0,
+        max: 0,
+        now: null,
+        priceItems: [],
+      };
+
+      return new Response(JSON.stringify(emptyResult), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     console.error(`External fetch failed: ${response.status}`);
     return new Response("Failed to fetch external data", { status: 502 });
   }

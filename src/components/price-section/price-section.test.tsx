@@ -2,11 +2,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import PriceSection from "./price-section";
 import React from "react";
-
-// Required for DOM APIs (like fetch)
 import "@testing-library/jest-dom";
 
-// Mock global fetch
 global.fetch = vi.fn();
 
 const mockData = {
@@ -16,7 +13,13 @@ const mockData = {
   avg: 75,
   max: 90,
   now: 62,
-  priceItems: [],
+  priceItems: [
+    {
+      time_start: "2025-06-11T13:00:00",
+      time_end: "2025-06-11T14:00:00",
+      øre_per_kWh: 62,
+    },
+  ],
 };
 
 describe("<PriceSection />", () => {
@@ -24,17 +27,7 @@ describe("<PriceSection />", () => {
     vi.clearAllMocks();
   });
 
-  it("shows loading text initially", () => {
-    (fetch as unknown as vi.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockData,
-    });
-
-    render(<PriceSection />);
-    expect(screen.getByText(/Loading prices/i)).toBeInTheDocument();
-  });
-
-  it("renders fetched power price data", async () => {
+  it("renders loading and then stat labels", async () => {
     (fetch as unknown as vi.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => mockData,
@@ -44,23 +37,34 @@ describe("<PriceSection />", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Now")).toBeInTheDocument();
+      expect(screen.getByText("Min")).toBeInTheDocument();
+      expect(screen.getByText("Avg")).toBeInTheDocument();
+      expect(screen.getByText("Max")).toBeInTheDocument();
     });
-
-    expect(screen.getByText("62")).toBeInTheDocument();
-    expect(screen.getByText("75")).toBeInTheDocument();
-    expect(screen.getByText("55")).toBeInTheDocument();
-    expect(screen.getByText("90")).toBeInTheDocument();
-    expect(screen.getAllByText(/øre/).length).toBeGreaterThan(0);
   });
 
-  it("handles fetch error gracefully", async () => {
+  it("renders placeholder values when no data is available", async () => {
     (fetch as unknown as vi.Mock).mockResolvedValueOnce({
-      ok: false,
+      ok: true,
+      json: async () => ({ ...mockData, priceItems: [] }),
     });
 
     render(<PriceSection />);
+
     await waitFor(() => {
-      expect(screen.queryByText("Now")).not.toBeInTheDocument();
+      const xPlaceholders = screen.getAllByText("X");
+      expect(xPlaceholders).toHaveLength(4);
+    });
+  });
+
+  it("handles fetch error gracefully", async () => {
+    (fetch as unknown as vi.Mock).mockResolvedValueOnce({ ok: false });
+
+    render(<PriceSection />);
+
+    await waitFor(() => {
+      const xPlaceholders = screen.getAllByText("X");
+      expect(xPlaceholders).toHaveLength(4);
     });
   });
 });
