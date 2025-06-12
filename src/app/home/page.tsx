@@ -9,6 +9,7 @@ import { supabase } from "@/lib/supabase/client";
 import PriceSection from "@/components/price-section/price-section";
 import SettingsOverlay from "@/components/settings-overlay/settings-overlay";
 import { POWER_ZONE_LABELS, PowerZone } from "@/constants/power-zone";
+import { TopBar } from "@/components/top-bar/top-bar";
 
 export default function Home() {
   const router = useRouter();
@@ -67,15 +68,7 @@ export default function Home() {
   // Main component.
   return (
     <div className={styles.background}>
-      <div className={styles.headerSection}>
-        <div className={styles.regionInfo}>
-          <span>{POWER_ZONE_LABELS[selectedZone]}</span>
-        </div>
-        <div className={styles.userInfo}>
-          <span>{session.user.email}</span>
-          <LuUser size={18} />
-        </div>
-      </div>
+      <TopBar selectedZone={selectedZone} session={session} />
       <div className={styles.contentWrapper}>
         <div className={styles.navigationBar}>
           <div className={styles.card}>

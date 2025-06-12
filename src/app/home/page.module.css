@@ -100,37 +100,3 @@
     transform: rotate(360deg);
   }
 }
-
-.headerSection {
-  height: 50px;
-  background-color: rgb(41, 41, 41);
-  border-radius: 10px;
-  margin: 10px;
-  padding: 0 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-sizing: border-box;
-  color: white;
-  font-weight: 600;
-  font-size: 1rem;
-  user-select: none;
-}
-
-.userInfo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.userIcon {
-  font-size: 1.5rem;
-  color: #bbb;
-}
-
-.regionInfo {
-  display: flex;
-  align-items: center;
-  font-weight: 500;
-  color: white;
-}
