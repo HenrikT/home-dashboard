@@ -68,11 +68,13 @@
   width: 100%;
   border-radius: 10px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   background-color: rgb(41, 41, 41);
   max-height: 100%;
   overflow: hidden;
+  padding-top: 0;
+  gap: 0;
 }
 
 .loadingContainer {

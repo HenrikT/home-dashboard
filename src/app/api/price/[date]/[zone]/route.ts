@@ -34,7 +34,6 @@ import type { ExternalPriceItem, PriceData, PriceItem } from "@/types/price";
  * - Logs the request and external URL to server logs.
  * - Validates date and zone format.
  */
-
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ date: string; zone: string }> }

@@ -4,12 +4,12 @@ import styles from "./page.module.css";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Session } from "@supabase/supabase-js";
-import { LuUser } from "react-icons/lu";
 import { supabase } from "@/lib/supabase/client";
 import PriceSection from "@/components/price-section/price-section";
 import SettingsOverlay from "@/components/settings-overlay/settings-overlay";
-import { POWER_ZONE_LABELS, PowerZone } from "@/constants/power-zone";
+import { PowerZone } from "@/constants/power-zone";
 import { TopBar } from "@/components/top-bar/top-bar";
+import ForecastSection from "@/components/forecast-section/forecast-section";
 
 export default function Home() {
   const router = useRouter();
@@ -85,7 +85,7 @@ export default function Home() {
             </div>
             <div className={styles.topRight}>
               <div className={styles.card}>
-                <p>This is the top right section</p>
+                <ForecastSection />
               </div>
             </div>
           </div>

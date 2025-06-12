@@ -3,13 +3,28 @@ import { TopBar } from "./top-bar";
 import { PowerZone, POWER_ZONE_LABELS } from "@/constants/power-zone";
 import { vi } from "vitest";
 import React from "react";
+import { Session, User } from "@supabase/supabase-js";
 
 describe("TopBar", () => {
-  const mockSession = {
+  const mockSession: Session = {
+    access_token: "",
+    token_type: "bearer",
     user: {
+      id: "mock-user-id",
       email: "henrik@example.com",
-    },
-  } as any;
+      aud: "authenticated",
+      created_at: "",
+      app_metadata: {},
+      user_metadata: {},
+      identities: [],
+      last_sign_in_at: "",
+      role: "",
+      updated_at: "",
+    } as User,
+    expires_in: 3600,
+    refresh_token: "",
+    expires_at: Math.floor(Date.now() / 1000) + 3600,
+  };
 
   beforeEach(() => {
     vi.useFakeTimers();
@@ -32,7 +47,6 @@ describe("TopBar", () => {
 
   it("renders the correct time in Norwegian locale", () => {
     render(<TopBar selectedZone={PowerZone.NO3} session={mockSession} />);
-    const expected = "Torsdag 12. juni 21:00:45"; // 19:00 UTC +02:00 Europe/Oslo
     expect(screen.getByTestId("clock").textContent).toMatch("Torsdag 12. juni kl. 19:00:45");
   });
 });
