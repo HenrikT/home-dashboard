@@ -17,7 +17,7 @@
 
 .cell {
   flex: 1;
-  padding: 0.7rem;
+  padding: 0.3rem;
   border-radius: 8px;
   background-color: #000000;
   color: white;
@@ -39,7 +39,7 @@
   text-align: left;
   background: #1c1c1c;
   color: white;
-  font-size: 1rem;
+  font-size: 0.8rem;
   font-weight: 600;
   padding: 0.5rem 0.75rem;
   border-radius: 8px;
