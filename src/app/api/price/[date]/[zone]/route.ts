@@ -1,4 +1,4 @@
-export const dynamic = "force-static";
+export const dynamic = "auto";
 import type { ExternalPriceItem, PriceData, PriceItem } from "@/types/price";
 
 /**
@@ -14,11 +14,11 @@ import type { ExternalPriceItem, PriceData, PriceItem } from "@/types/price";
  * Behavior:
  * - Parses the date into year/month-day format required by the external API.
  * - Fetches power prices from https://www.hvakosterstrommen.no/api/v1/prices/{year}/{month-day}_{zone}.json
- * - Caches the response (force-cache).
+ * - Does not cache the response (real-time behavior).
  * - Calculates and returns statistics:
  *     - min, avg, and max price in øre/kWh.
  *     - Each price item includes derived `øre_per_kWh`.
- * - Note: `now` is derived client-side to preserve static caching.
+ * - Note: `now` is derived client-side.
  * - Returns the enriched JSON data to the caller.
  *
  * Example request:
@@ -28,7 +28,7 @@ import type { ExternalPriceItem, PriceData, PriceItem } from "@/types/price";
  *   https://www.hvakosterstrommen.no/api/v1/prices/2025/06-08_NO1.json
  *
  * Caching:
- * - The fetch uses 'force-cache', so results are cached indefinitely by Next.js unless redeployed or invalidated.
+ * - No caching is used on this endpoint to ensure accurate per-day data.
  *
  * Notes:
  * - Logs the request and external URL to server logs.
@@ -42,7 +42,6 @@ export async function GET(
 
   console.log(`Handling GET for date=${date}, zone=${zone}`);
 
-  // Validate input
   if (!date || !zone) return new Response("Missing date or zone", { status: 400 });
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date))
     return new Response("Invalid date format", { status: 400 });
@@ -52,7 +51,7 @@ export async function GET(
   const externalUrl = `https://www.hvakosterstrommen.no/api/v1/prices/${year}/${month}-${day}_${zone}.json`;
 
   console.log(`Fetching external URL: ${externalUrl}`);
-  const response = await fetch(externalUrl, { cache: "force-cache" });
+  const response = await fetch(externalUrl);
 
   if (!response.ok) {
     if (response.status === 404) {
