@@ -34,8 +34,8 @@ export async function GET(req: Request) {
   // Current timestamp
   const now = new Date().toISOString();
 
-  // Perform UPSERT
-  const { error } = await supabase.from("keep_alive").upsert([{ id: 1, name: now }]);
+  // Perform INSERT
+  const { error } = await supabase.from("keep_alive").insert([{ name: now }]);
 
   if (error) {
     console.error("Keep-alive error:", error);
