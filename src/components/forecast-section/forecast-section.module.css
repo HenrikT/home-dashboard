@@ -17,7 +17,7 @@
 
 .cell {
   flex: 1;
-  padding: 0.3rem;
+  padding: 0.2rem 0.15rem;
   border-radius: 8px;
   background-color: #000000;
   color: white;
@@ -35,7 +35,7 @@
 }
 
 .dayLabel {
-  min-width: 3rem;
+  min-width: 6rem;
   text-align: left;
   background: #1c1c1c;
   color: white;

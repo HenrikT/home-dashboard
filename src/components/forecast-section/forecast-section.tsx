@@ -12,10 +12,16 @@ export default function ForecastSection() {
     max: number;
   } | null>(null);
   const [zone, setZone] = useState<PowerZone>(PowerZone.NO1);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("powerZone") as PowerZone;
     if (stored) setZone(stored);
+
+    const checkMobile = () => setIsMobile(window.innerWidth <= 640);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   useEffect(() => {
@@ -35,6 +41,13 @@ export default function ForecastSection() {
         timeZone: "Europe/Oslo",
       });
 
+      const compactFormatter = new Intl.DateTimeFormat("nb-NO", {
+        weekday: "long",
+        day: "numeric",
+        month: "2-digit",
+        timeZone: "Europe/Oslo",
+      });
+
       const grouped: Record<string, Segment[]> = {};
 
       raw.forecastAdvice.forEach((entry: ForecastApiResponse["forecastAdvice"][number]) => {
@@ -50,7 +63,9 @@ export default function ForecastSection() {
           ? "I dag"
           : isTomorrow
           ? "I morgen"
-          : formatter.format(entryDate).replace(/^./, (m) => m.toUpperCase());
+          : (isMobile ? compactFormatter : formatter)
+              .format(entryDate)
+              .replace(/^./, (m) => m.toUpperCase());
         if (!grouped[day]) grouped[day] = [];
 
         grouped[day].push({
@@ -74,7 +89,7 @@ export default function ForecastSection() {
     }
 
     fetchForecast();
-  }, [zone]);
+  }, [zone, isMobile]);
 
   if (!forecast) return <p className={styles.loading}>Laster estimerte priser…</p>;
 

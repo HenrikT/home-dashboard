@@ -17,6 +17,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
   const [selectedZone, setSelectedZone] = useState<PowerZone>(PowerZone.NO1);
+  const [mobilePanel, setMobilePanel] = useState<"price" | "forecast">("price");
 
   // Get the selected power zone from local storage to show it on the top bar.
   useEffect(() => {
@@ -77,6 +78,7 @@ export default function Home() {
           </div>
         </div>
         <div className={styles.mainContent}>
+          {/* Desktop two-column top section (hidden on small screens) */}
           <div className={styles.topSection}>
             <div className={styles.topLeft}>
               <div className={styles.card}>
@@ -89,11 +91,37 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className={styles.bottomSection}>
-            <div className={styles.card}>
-              <p>This is the bottom section</p>
+
+          {/* Mobile segmented control + single panel view */}
+          <div className={styles.mobileSegmentWrapper}>
+            <div className={styles.mobileSegment} role="tablist">
+              <button
+                className={`${styles.segmentButton} ${
+                  mobilePanel === "price" ? styles.active : ""
+                }`}
+                onClick={() => setMobilePanel("price")}
+                aria-pressed={mobilePanel === "price"}
+              >
+                Prices
+              </button>
+              <button
+                className={`${styles.segmentButton} ${
+                  mobilePanel === "forecast" ? styles.active : ""
+                }`}
+                onClick={() => setMobilePanel("forecast")}
+                aria-pressed={mobilePanel === "forecast"}
+              >
+                Forecast
+              </button>
+            </div>
+
+            <div className={styles.mobileTop}>
+              <div className={styles.card}>
+                {mobilePanel === "price" ? <PriceSection /> : <ForecastSection />}
+              </div>
             </div>
           </div>
+          {/* Bottom section removed */}
         </div>
       </div>
     </div>

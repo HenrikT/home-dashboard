@@ -37,3 +37,45 @@
   font-weight: 1500;
   font-size: 1.5rem;
 }
+
+.desktopTime {
+  display: inline;
+}
+
+.mobileTime {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .headerSection {
+    height: auto;
+    padding: 8px 12px;
+    margin: 8px;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .regionInfo {
+    display: none;
+  }
+
+  .timeInfo {
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .desktopTime {
+    display: none;
+  }
+
+  .mobileTime {
+    display: inline;
+  }
+
+  .userInfo {
+    display: none;
+  }
+}

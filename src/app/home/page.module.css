@@ -1,5 +1,5 @@
 .background {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -29,50 +29,47 @@
   flex: 3;
   display: flex;
   flex-direction: row;
-}
-
-.bottomSection {
-  flex: 2;
-  margin-bottom: 10px;
-  margin-right: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch; /* ensure children stretch to same height */
+  gap: 12px;
 }
 
 .topRight {
-  margin-bottom: 10px;
+  margin-bottom: 0;
   margin-left: 5px;
   margin-right: 10px;
   flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
 }
 
 .topLeft {
-  margin-bottom: 10px;
+  margin-bottom: 0;
   margin-right: 5px;
   flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
   max-height: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .card {
-  height: 100%;
   width: 100%;
   border-radius: 10px;
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start; /* hug top */
   background-color: rgb(41, 41, 41);
   max-height: 100%;
-  overflow: hidden;
+  overflow: auto;
   padding-top: 0;
   gap: 0;
+  font-size: 14px;
+  flex: 1; /* ensure card fills its column */
 }
 
 .loadingContainer {
@@ -90,6 +87,116 @@
   border-top: 5px solid #333;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+}
+/* Mobile specific styles */
+.mobileSegmentWrapper {
+  display: none; /* hidden by default (desktop) */
+}
+
+.mobileTop {
+  display: none; /* hidden by default (desktop) */
+}
+
+@media (max-width: 640px) {
+  .contentWrapper {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .navigationBar {
+    width: 100%;
+    margin: 0;
+    padding: 8px 0;
+    order: 2; /* push nav to bottom */
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(41, 41, 41, 0.95);
+    flex-shrink: 0;
+  }
+
+  .mainContent {
+    order: 1; /* content above nav */
+    overflow-y: auto;
+    padding-bottom: 8px;
+  }
+
+  .navButton {
+    height: 56px;
+    width: 56px;
+    font-size: 0.8rem;
+  }
+
+  .topSection {
+    display: none; /* hide desktop two-column on mobile */
+  }
+
+  .mobileSegmentWrapper {
+    display: block;
+  }
+
+  .mobileSegment {
+    display: flex;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 8px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    justify-content: center;
+    align-items: center;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(4px);
+  }
+
+  .segmentButton {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 8px 14px;
+    color: #e6e6e6;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 180ms ease;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .segmentButton:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+  }
+
+  .segmentButton.active {
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    color: #111;
+    border-color: transparent;
+    box-shadow: 0 8px 20px rgba(255, 126, 95, 0.12);
+  }
+
+  .segmentButton.active {
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    color: #111;
+  }
+
+  .mobileTop {
+    display: block;
+  }
+
+  .card {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  .navigationBar .card {
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+  }
 }
 
 @keyframes spin {

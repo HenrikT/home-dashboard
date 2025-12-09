@@ -20,17 +20,31 @@ export function TopBar({ selectedZone, session }: Props) {
     return () => clearInterval(interval);
   }, []);
 
-  const formattedTime = now
-    .toLocaleString("nb-NO", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    })
-    .replace(/^./, (m) => m.toUpperCase());
+  const getMobileFormat = () => {
+    const day = String(now.getDate()).padStart(2, "0");
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const weekday = now
+      .toLocaleString("nb-NO", { weekday: "long" })
+      .replace(/^./, (m) => m.toUpperCase());
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const seconds = String(now.getSeconds()).padStart(2, "0");
+    return `${weekday} ${day}.${month} kl. ${hours}:${minutes}:${seconds}`;
+  };
+
+  const getDesktopFormat = () => {
+    return now
+      .toLocaleString("nb-NO", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      })
+      .replace(/^./, (m) => m.toUpperCase());
+  };
 
   return (
     <div className={styles.headerSection}>
@@ -38,7 +52,10 @@ export function TopBar({ selectedZone, session }: Props) {
         <span>{POWER_ZONE_LABELS[selectedZone]}</span>
       </div>
       <div className={styles.timeInfo}>
-        <span data-testid="clock">{formattedTime}</span>
+        <span data-testid="clock" className={styles.desktopTime}>
+          {getDesktopFormat()}
+        </span>
+        <span className={styles.mobileTime}>{getMobileFormat()}</span>
       </div>
       <div className={styles.userInfo}>
         <span>{session.user.email}</span>
