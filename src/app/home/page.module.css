@@ -1,5 +1,5 @@
 .background {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -107,16 +107,21 @@
     width: 100%;
     margin: 0;
     padding: 8px 0;
-    order: 2; /* push nav to bottom */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     background-color: rgba(41, 41, 41, 0.95);
     flex-shrink: 0;
+    z-index: 100;
   }
 
   .mainContent {
     order: 1; /* content above nav */
+    flex: 1;
     overflow-y: auto;
-    padding-bottom: 8px;
+    padding-bottom: 80px;
   }
 
   .navButton {
@@ -196,6 +201,8 @@
     align-items: center;
     flex-direction: row;
     width: 100%;
+    overflow: visible;
+    max-height: none;
   }
 }
 
