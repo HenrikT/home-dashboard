@@ -1,4 +1,3 @@
-/// <reference types="vitest" />
 import { render, screen } from "@testing-library/react";
 import { TopBar } from "./top-bar";
 import { PowerZone, POWER_ZONE_LABELS } from "@/constants/power-zone";

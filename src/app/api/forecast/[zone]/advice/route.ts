@@ -1,4 +1,4 @@
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 import type { NextRequest } from "next/server";
 import type { ForecastAdvice } from "@/types/forecast";
@@ -26,7 +26,7 @@ import type { ForecastAdvice } from "@/types/forecast";
  *   POST https://www.ladeassistent.no/api/forecast/NO1/advice
  *
  * Caching:
- * - The fetch uses 'force-cache' to take advantage of Next.js' built-in revalidation.
+ * - Caching is disabled (force-dynamic, cache: 'no-store').
  *
  * Notes:
  * - Validates the zone string format.
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       Origin: "https://www.ladeassistent.no",
     },
     body: JSON.stringify(payload),
-    next: { revalidate: 86400 },
+    cache: "no-store",
   });
 
   if (!res.ok) {
