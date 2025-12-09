@@ -1,5 +1,5 @@
 import { GET } from "./route";
-import { vi, test, expect, beforeEach } from "vitest";
+import { vi, test, expect, beforeEach, type Mock } from "vitest";
 
 // Mock createClient and its return value
 vi.mock("@/lib/supabase/server", () => ({
@@ -33,7 +33,7 @@ test("returns 200 OK when Supabase upsert succeeds", async () => {
   });
 
   // Mock createClient to return supabase mock
-  (createClient as unknown as vi.Mock).mockResolvedValue({
+  (createClient as unknown as Mock).mockResolvedValue({
     from: mockFrom,
   });
 
@@ -61,7 +61,7 @@ test("returns 500 if Supabase upsert fails", async () => {
     upsert: mockUpsert,
   });
 
-  (createClient as unknown as vi.Mock).mockResolvedValue({
+  (createClient as unknown as Mock).mockResolvedValue({
     from: mockFrom,
   });
 

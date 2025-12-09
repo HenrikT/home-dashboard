@@ -1,5 +1,5 @@
 import { GET } from "./route";
-import { expect, test, vi } from "vitest";
+import { expect, test, vi, type Mock } from "vitest";
 import type { NextRequest } from "next/server";
 
 // Mock global fetch
@@ -44,7 +44,7 @@ test("returns 400 for invalid zone", async () => {
 });
 
 test("returns 502 if external fetch fails", async () => {
-  (fetch as vi.Mock).mockResolvedValueOnce({
+  (fetch as Mock).mockResolvedValueOnce({
     ok: false,
     status: 500,
     statusText: "Internal Server Error",
@@ -69,7 +69,7 @@ test("returns 200 OK with modified forecast data", async () => {
     ],
   };
 
-  (fetch as vi.Mock).mockResolvedValueOnce({
+  (fetch as Mock).mockResolvedValueOnce({
     ok: true,
     status: 200,
     json: vi.fn().mockResolvedValue(mockForecast),

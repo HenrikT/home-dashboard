@@ -1,7 +1,8 @@
+/// <reference types="vitest" />
 import { render, screen } from "@testing-library/react";
 import { TopBar } from "./top-bar";
 import { PowerZone, POWER_ZONE_LABELS } from "@/constants/power-zone";
-import { vi } from "vitest";
+import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
 import React from "react";
 import { Session, User } from "@supabase/supabase-js";
 

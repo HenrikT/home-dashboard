@@ -1,4 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+/// <reference types="vitest" />
+import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import PriceSection from "./price-section";
 import React from "react";
@@ -28,7 +29,7 @@ describe("<PriceSection />", () => {
   });
 
   it("renders loading and then stat labels", async () => {
-    (fetch as unknown as vi.Mock).mockResolvedValueOnce({
+    (fetch as unknown as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => mockData,
     });
@@ -44,7 +45,7 @@ describe("<PriceSection />", () => {
   });
 
   it("renders placeholder values when no data is available", async () => {
-    (fetch as unknown as vi.Mock).mockResolvedValueOnce({
+    (fetch as unknown as Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ ...mockData, priceItems: [] }),
     });
@@ -58,7 +59,7 @@ describe("<PriceSection />", () => {
   });
 
   it("handles fetch error gracefully", async () => {
-    (fetch as unknown as vi.Mock).mockResolvedValueOnce({ ok: false });
+    (fetch as unknown as Mock).mockResolvedValueOnce({ ok: false });
 
     render(<PriceSection />);
 
